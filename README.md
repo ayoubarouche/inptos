@@ -1,2 +1,2 @@
 # inptos
-operating system that will work on embedded systems specially in stm32
+operating system for embedded systems specially : stm32
