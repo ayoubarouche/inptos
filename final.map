@@ -1,0 +1,82 @@
+
+Discarded input sections
+
+ .group         0x0000000000000000        0x8 kernel.o
+ .group         0x0000000000000000        0x8 kernel.o
+ .comment       0x0000000000000000       0x28 kernel.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+                0x0000000000200000                . = 0x200000
+
+.text           0x0000000000200000      0x12f
+ *(.multiboot)
+ .multiboot     0x0000000000200000        0xc loader.o
+ *(.text*)
+ .text          0x000000000020000c       0x15 loader.o
+                0x000000000020000c                loader
+ .text          0x0000000000200021       0xc5 kernel.o
+                0x0000000000200021                printf(char const*)
+                0x000000000020008b                callConstructors
+                0x00000000002000c8                kernelMain
+ .text.__x86.get_pc_thunk.ax
+                0x00000000002000e6        0x4 kernel.o
+                0x00000000002000e6                __x86.get_pc_thunk.ax
+ .text.__x86.get_pc_thunk.bx
+                0x00000000002000ea        0x4 kernel.o
+                0x00000000002000ea                __x86.get_pc_thunk.bx
+ *(.rodata)
+ *fill*         0x00000000002000ee        0x2 
+ .rodata        0x00000000002000f0       0x3f kernel.o
+
+.eh_frame       0x0000000000200130       0xa4
+ .eh_frame      0x0000000000200130       0xa4 kernel.o
+
+.iplt           0x00000000002001d4        0x0
+ .iplt          0x00000000002001d4        0x0 loader.o
+
+.rel.dyn        0x00000000002001d4        0x0
+ .rel.got       0x00000000002001d4        0x0 loader.o
+ .rel.iplt      0x00000000002001d4        0x0 loader.o
+ .rel.text      0x00000000002001d4        0x0 loader.o
+
+.data           0x00000000002001d4        0x4
+                0x00000000002001d4                start_ctors = .
+ *(.init_array)
+ *(SORT_BY_INIT_PRIORITY(.init_array.*))
+                0x00000000002001d4                end_ctors = .
+ *(.data)
+ .data          0x00000000002001d4        0x0 loader.o
+ .data          0x00000000002001d4        0x4 kernel.o
+
+.got            0x00000000002001d8        0x0
+ .got           0x00000000002001d8        0x0 loader.o
+
+.got.plt        0x00000000002001d8        0xc
+ .got.plt       0x00000000002001d8        0xc loader.o
+                0x00000000002001d8                _GLOBAL_OFFSET_TABLE_
+
+.igot.plt       0x00000000002001e4        0x0
+ .igot.plt      0x00000000002001e4        0x0 loader.o
+
+.bss            0x00000000002001e4   0x200000
+ *(.bss)
+ .bss           0x00000000002001e4   0x200000 loader.o
+ .bss           0x00000000004001e4        0x0 kernel.o
+
+/DISCARD/
+ *(.fini_array*)
+ *(.comment)
+LOAD loader.o
+LOAD kernel.o
+OUTPUT(mykernel.bin elf32-i386)
+
+.note.GNU-stack
+                0x0000000000000000        0x0
+ .note.GNU-stack
+                0x0000000000000000        0x0 kernel.o
