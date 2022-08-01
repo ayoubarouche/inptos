@@ -21,20 +21,20 @@ mykernel.iso: mykernel.bin
 	mkdir iso/boot
 	mkdir iso/boot/grub
 	cp $< iso/boot/
-	echo 'set timeout-0' >> iso/boot/grub/grub.cfg
-	echo 'set default-0' >> iso/boot/grub/grub.cfg
-	echo 'menuentry "My Operating System"{' >> iso/boot/grub/grub.cfg
-	echo '  multiboot /boot/mykernel.bin' >> iso/boot/grub/grub.cfg
-	echo ' boot' >> iso/boot/grub/grub.cfg
+	echo 'set timeout=0' >> iso/boot/grub/grub.cfg
+	echo 'set default=0' >> iso/boot/grub/grub.cfg
+	echo '' >> iso/boot/grub/grub.cfg
+	echo 'menuentry "Inptos operating system" {' >> iso/boot/grub/grub.cfg
+	echo '	multiboot /boot/mykernel.bin' >> iso/boot/grub/grub.cfg
+	echo '	boot' >> iso/boot/grub/grub.cfg
 	echo '}' >> iso/boot/grub/grub.cfg
-	grub-mkrescue --xorriso=/home/arouche/xorriso-1.4.6/xorriso/xorriso --output=$@ iso
+	grub-mkrescue --output=$@ iso
 	rm -rf iso 
 	
 run: mykernel.iso
-	rm -rf iso
 	qemu-system-i386 -net user -cdrom mykernel.iso
 clear:
-	mkdir iso
+	rm -rf iso
 	rm kernel.o
 	rm loader.o
 	rm mykernel.bin

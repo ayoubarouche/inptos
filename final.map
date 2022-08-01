@@ -43,7 +43,6 @@ Linker script and memory map
 .rel.dyn        0x00000000002001d4        0x0
  .rel.got       0x00000000002001d4        0x0 loader.o
  .rel.iplt      0x00000000002001d4        0x0 loader.o
- .rel.text      0x00000000002001d4        0x0 loader.o
 
 .data           0x00000000002001d4        0x4
                 0x00000000002001d4                start_ctors = .
