@@ -1,8 +1,12 @@
 
 Discarded input sections
 
+ .group         0x0000000000000000        0x8 gdt.o
+ .comment       0x0000000000000000       0x28 gdt.o
  .group         0x0000000000000000        0x8 kernel.o
  .group         0x0000000000000000        0x8 kernel.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 kernel.o
  .comment       0x0000000000000000       0x28 kernel.o
 
 Memory Configuration
@@ -14,68 +18,86 @@ Linker script and memory map
 
                 0x0000000000200000                . = 0x200000
 
-.text           0x0000000000200000      0x12f
+.text           0x0000000000200000      0x3e7
  *(.multiboot)
  .multiboot     0x0000000000200000        0xc loader.o
  *(.text*)
  .text          0x000000000020000c       0x15 loader.o
                 0x000000000020000c                loader
- .text          0x0000000000200021       0xc5 kernel.o
-                0x0000000000200021                printf(char const*)
-                0x000000000020008b                callConstructors
-                0x00000000002000c8                kernelMain
+ *fill*         0x0000000000200021        0x1 
+ .text          0x0000000000200022      0x28a gdt.o
+                0x0000000000200022                GlobalDescriptorTable::GlobalDescriptorTable()
+                0x0000000000200022                GlobalDescriptorTable::GlobalDescriptorTable()
+                0x00000000002000a8                GlobalDescriptorTable::~GlobalDescriptorTable()
+                0x00000000002000a8                GlobalDescriptorTable::~GlobalDescriptorTable()
+                0x00000000002000b8                GlobalDescriptorTable::DataSegmentSelector()
+                0x00000000002000cc                GlobalDescriptorTable::CodeSegmentSelector()
+                0x00000000002000e0                GlobalDescriptorTable::SegmentDescriptor::SegmentDescriptor(unsigned int, unsigned int, unsigned char)
+                0x00000000002000e0                GlobalDescriptorTable::SegmentDescriptor::SegmentDescriptor(unsigned int, unsigned int, unsigned char)
+                0x00000000002001b4                GlobalDescriptorTable::SegmentDescriptor::Base()
+                0x000000000020022a                GlobalDescriptorTable::SegmentDescriptor::Limit()
  .text.__x86.get_pc_thunk.ax
-                0x00000000002000e6        0x4 kernel.o
-                0x00000000002000e6                __x86.get_pc_thunk.ax
+                0x00000000002002ac        0x4 gdt.o
+                0x00000000002002ac                __x86.get_pc_thunk.ax
+ .text          0x00000000002002b0       0xe8 kernel.o
+                0x00000000002002b0                printf(char const*)
+                0x000000000020031a                callConstructors
+                0x0000000000200357                kernelMain
  .text.__x86.get_pc_thunk.bx
-                0x00000000002000ea        0x4 kernel.o
-                0x00000000002000ea                __x86.get_pc_thunk.bx
+                0x0000000000200398        0x4 kernel.o
+                0x0000000000200398                __x86.get_pc_thunk.bx
  *(.rodata)
- *fill*         0x00000000002000ee        0x2 
- .rodata        0x00000000002000f0       0x3f kernel.o
+ .rodata        0x000000000020039c       0x4b kernel.o
 
-.eh_frame       0x0000000000200130       0xa4
- .eh_frame      0x0000000000200130       0xa4 kernel.o
+.eh_frame       0x00000000002003e8      0x184
+ .eh_frame      0x00000000002003e8      0x10c gdt.o
+ .eh_frame      0x00000000002004f4       0x78 kernel.o
+                                         0xa4 (size before relaxing)
 
-.iplt           0x00000000002001d4        0x0
- .iplt          0x00000000002001d4        0x0 loader.o
+.iplt           0x000000000020056c        0x0
+ .iplt          0x000000000020056c        0x0 loader.o
 
-.rel.dyn        0x00000000002001d4        0x0
- .rel.got       0x00000000002001d4        0x0 loader.o
- .rel.iplt      0x00000000002001d4        0x0 loader.o
+.rel.dyn        0x000000000020056c        0x0
+ .rel.got       0x000000000020056c        0x0 loader.o
+ .rel.iplt      0x000000000020056c        0x0 loader.o
 
-.data           0x00000000002001d4        0x4
-                0x00000000002001d4                start_ctors = .
+.data           0x000000000020056c        0x4
+                0x000000000020056c                start_ctors = .
  *(.init_array)
  *(SORT_BY_INIT_PRIORITY(.init_array.*))
-                0x00000000002001d4                end_ctors = .
+                0x000000000020056c                end_ctors = .
  *(.data)
- .data          0x00000000002001d4        0x0 loader.o
- .data          0x00000000002001d4        0x4 kernel.o
+ .data          0x000000000020056c        0x0 loader.o
+ .data          0x000000000020056c        0x0 gdt.o
+ .data          0x000000000020056c        0x4 kernel.o
 
-.got            0x00000000002001d8        0x0
- .got           0x00000000002001d8        0x0 loader.o
+.got            0x0000000000200570        0x0
+ .got           0x0000000000200570        0x0 loader.o
 
-.got.plt        0x00000000002001d8        0xc
- .got.plt       0x00000000002001d8        0xc loader.o
-                0x00000000002001d8                _GLOBAL_OFFSET_TABLE_
+.got.plt        0x0000000000200570        0xc
+ .got.plt       0x0000000000200570        0xc loader.o
+                0x0000000000200570                _GLOBAL_OFFSET_TABLE_
 
-.igot.plt       0x00000000002001e4        0x0
- .igot.plt      0x00000000002001e4        0x0 loader.o
+.igot.plt       0x000000000020057c        0x0
+ .igot.plt      0x000000000020057c        0x0 loader.o
 
-.bss            0x00000000002001e4   0x200000
+.bss            0x000000000020057c   0x200000
  *(.bss)
- .bss           0x00000000002001e4   0x200000 loader.o
- .bss           0x00000000004001e4        0x0 kernel.o
+ .bss           0x000000000020057c   0x200000 loader.o
+ .bss           0x000000000040057c        0x0 gdt.o
+ .bss           0x000000000040057c        0x0 kernel.o
 
 /DISCARD/
  *(.fini_array*)
  *(.comment)
 LOAD loader.o
+LOAD gdt.o
 LOAD kernel.o
 OUTPUT(mykernel.bin elf32-i386)
 
 .note.GNU-stack
                 0x0000000000000000        0x0
+ .note.GNU-stack
+                0x0000000000000000        0x0 gdt.o
  .note.GNU-stack
                 0x0000000000000000        0x0 kernel.o
